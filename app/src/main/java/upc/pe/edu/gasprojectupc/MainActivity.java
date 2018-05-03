@@ -14,6 +14,7 @@ import android.view.MenuItem;
 
 import upc.pe.edu.gasprojectupc.Entities.Store;
 import upc.pe.edu.gasprojectupc.Fragments.CardsFragment;
+import upc.pe.edu.gasprojectupc.Fragments.CarritoFragment;
 import upc.pe.edu.gasprojectupc.Fragments.DetailStoreFragment;
 import upc.pe.edu.gasprojectupc.Fragments.FavoritesFragment;
 import upc.pe.edu.gasprojectupc.Fragments.MapFragment;
@@ -23,7 +24,7 @@ import upc.pe.edu.gasprojectupc.Fragments.StoreFragment;
 import upc.pe.edu.gasprojectupc.Interfaces.IComunicateFragments;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, CardsFragment.OnFragmentInteractionListener, DetailStoreFragment.OnFragmentInteractionListener, FavoritesFragment.OnFragmentInteractionListener, MapFragment.OnFragmentInteractionListener, OrderDetailFragment.OnFragmentInteractionListener,OrderFragment.OnFragmentInteractionListener,StoreFragment.OnFragmentInteractionListener, IComunicateFragments {
+        implements NavigationView.OnNavigationItemSelectedListener, CardsFragment.OnFragmentInteractionListener, DetailStoreFragment.OnFragmentInteractionListener, FavoritesFragment.OnFragmentInteractionListener, MapFragment.OnFragmentInteractionListener, OrderDetailFragment.OnFragmentInteractionListener,OrderFragment.OnFragmentInteractionListener,StoreFragment.OnFragmentInteractionListener, IComunicateFragments, CarritoFragment.OnFragmentInteractionListener {
 
     DetailStoreFragment detailStoreFragment;
 

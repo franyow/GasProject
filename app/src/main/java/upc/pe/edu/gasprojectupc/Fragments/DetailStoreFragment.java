@@ -4,7 +4,9 @@ import android.content.Context;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +39,7 @@ public class DetailStoreFragment extends Fragment {
 
     TextView textDescription;
     ImageView imageDetalle;
+    FloatingActionButton buttonCarrito;
 
     public DetailStoreFragment() {
         // Required empty public constructor
@@ -75,6 +78,7 @@ public class DetailStoreFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_detail, container, false);
         textDescription=view.findViewById(R.id.textDescription);
         imageDetalle=view.findViewById(R.id.imageDetail);
+        buttonCarrito = view.findViewById(R.id.addFloat);
 
         Bundle storeObject = getArguments();
         Store store = null;
@@ -86,6 +90,20 @@ public class DetailStoreFragment extends Fragment {
 
 
         }
+
+        buttonCarrito.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = new CarritoFragment();
+                getFragmentManager().beginTransaction().replace(R.id.content_main,fragment).commit();
+
+
+            }
+        });
+
+
+
+
 
         return view;
     }
