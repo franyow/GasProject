@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "896713661220",
+    "firebase_url": "https://gasupc-1525361388402.firebaseio.com",
+    "project_id": "gasupc-1525361388402",
+    "storage_bucket": "gasupc-1525361388402.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:896713661220:android:b75ef45ea5031685",
+        "android_client_info": {
+          "package_name": "upc.pe.edu.gasprojectupc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "896713661220-a196amb8ei5hcj93j18gm7o49rbrd802.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "upc.pe.edu.gasprojectupc",
+            "certificate_hash": "23dafa6fe4f82fb970d4774b94ab0ee124a5f825"
+          }
+        },
+        {
+          "client_id": "896713661220-rfqc2ceu7bmr24ccfomtsegj6v15ag7c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhoIypQgOOWxTLD3i2HR9wUUE9F78hw2w"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "896713661220-rfqc2ceu7bmr24ccfomtsegj6v15ag7c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

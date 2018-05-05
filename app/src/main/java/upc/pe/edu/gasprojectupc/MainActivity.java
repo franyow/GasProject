@@ -11,6 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import upc.pe.edu.gasprojectupc.Entities.Store;
 import upc.pe.edu.gasprojectupc.Fragments.CardsFragment;
@@ -27,6 +29,9 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, CardsFragment.OnFragmentInteractionListener, DetailStoreFragment.OnFragmentInteractionListener, FavoritesFragment.OnFragmentInteractionListener, MapFragment.OnFragmentInteractionListener, OrderDetailFragment.OnFragmentInteractionListener,OrderFragment.OnFragmentInteractionListener,StoreFragment.OnFragmentInteractionListener, IComunicateFragments, CarritoFragment.OnFragmentInteractionListener {
 
     DetailStoreFragment detailStoreFragment;
+    DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+    DatabaseReference mensajeRef= ref.child("mensaje");
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

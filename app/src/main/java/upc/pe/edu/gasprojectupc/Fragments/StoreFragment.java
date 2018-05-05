@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
 
@@ -41,6 +42,8 @@ public class StoreFragment extends Fragment {
 
     RecyclerView recyclerStores;
     ArrayList<Store> listaStores;
+    DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+    DatabaseReference mensajeRef= ref.child("mensaje");
 
 
     Activity activity;
