@@ -10,10 +10,21 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import upc.pe.edu.gasprojectupc.Adapters.FirebaseAdapterStore;
+import upc.pe.edu.gasprojectupc.Entities.Distribuidor;
 import upc.pe.edu.gasprojectupc.Entities.Store;
 import upc.pe.edu.gasprojectupc.Interfaces.IComunicateFragments;
 import upc.pe.edu.gasprojectupc.R;
@@ -42,8 +53,7 @@ public class StoreFragment extends Fragment {
 
     RecyclerView recyclerStores;
     ArrayList<Store> listaStores;
-    DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-    DatabaseReference mensajeRef= ref.child("mensaje");
+    DatabaseReference mDatabase;
 
 
     Activity activity;
@@ -84,22 +94,31 @@ public class StoreFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_store, container, false);
+        //firebase data
+        mDatabase=FirebaseDatabase.getInstance().getReference().child("suppliers");
+        mDatabase.keepSynced(true);
+
+
         recyclerStores=view.findViewById(R.id.recycler_store);
         listaStores = new ArrayList<>();
         recyclerStores.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        StoreAdapter adapter = new StoreAdapter(listaStores);
-        recyclerStores.setAdapter(adapter);
 
-        adapter.setOnClickListener(new View.OnClickListener() {
+
+
+
+        //StoreAdapter adapter = new StoreAdapter(listaStores);
+        //recyclerStores.setAdapter(adapter);
+
+        /*adapter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 interfaceComunicateFragments.enviarTienda(listaStores.get(recyclerStores.getChildAdapterPosition(view)));
 
             }
-        });
+        });*/
 
-        llenarLista();
+        //llenarLista();
 
         return view;
     }
@@ -155,5 +174,55 @@ public class StoreFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        FirebaseRecyclerAdapter<Distribuidor,DistriViewholder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Distribuidor, DistriViewholder>
+                (Distribuidor.class,R.layout.item_list_store,DistriViewholder.class,mDatabase) {
+            @Override
+            protected void populateViewHolder(DistriViewholder viewHolder, Distribuidor model, int position) {
+
+                viewHolder.setName(model.getName());
+                viewHolder.setDescrip(model.getDescription());
+                viewHolder.setImg(getContext(),model.getImage());
+
+
+
+            }
+        };
+
+
+
+        recyclerStores.setAdapter(firebaseRecyclerAdapter);
+
+
+    }
+
+    public static class DistriViewholder extends RecyclerView.ViewHolder {
+        View mView;
+        public DistriViewholder(View itemView){
+            super(itemView);
+            mView=itemView;
+        }
+
+        public void setName(String name){
+            TextView post_name = mView.findViewById(R.id.textTitulo);
+            post_name.setText(name);
+        }
+
+        public void setDescrip(String description){
+            TextView post_descrip = mView.findViewById(R.id.textShortDes);
+            post_descrip.setText(description);
+        }
+
+        public void setImg(Context ctx,String image){
+            ImageView post_img = (ImageView) mView.findViewById(R.id.imageView3);
+            Picasso.with(ctx).load(image).into(post_img);
+        }
+
+
     }
 }
