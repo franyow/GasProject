@@ -10,25 +10,19 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-import upc.pe.edu.gasprojectupc.Adapters.FirebaseAdapterStore;
+import upc.pe.edu.gasprojectupc.Adapters.DistriViewholder;
 import upc.pe.edu.gasprojectupc.Entities.Distribuidor;
 import upc.pe.edu.gasprojectupc.Entities.Store;
 import upc.pe.edu.gasprojectupc.Interfaces.IComunicateFragments;
 import upc.pe.edu.gasprojectupc.R;
-import upc.pe.edu.gasprojectupc.Adapters.StoreAdapter;
 
 
 /**
@@ -54,6 +48,13 @@ public class StoreFragment extends Fragment {
     RecyclerView recyclerStores;
     ArrayList<Store> listaStores;
     DatabaseReference mDatabase;
+    DatabaseReference detailSupplier;
+
+
+
+    //
+    // read the index key
+
 
 
     Activity activity;
@@ -97,6 +98,12 @@ public class StoreFragment extends Fragment {
         //firebase data
         mDatabase=FirebaseDatabase.getInstance().getReference().child("suppliers");
         mDatabase.keepSynced(true);
+
+
+
+
+        //detail
+        detailSupplier=FirebaseDatabase.getInstance().getReference().child("suppliers");
 
 
         recyclerStores=view.findViewById(R.id.recycler_store);
@@ -161,20 +168,13 @@ public class StoreFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+
 
     @Override
     public void onStart() {
@@ -189,40 +189,33 @@ public class StoreFragment extends Fragment {
                 viewHolder.setDescrip(model.getDescription());
                 viewHolder.setImg(getContext(),model.getImage());
 
+            }
+
+            @Override
+            public DistriViewholder onCreateViewHolder(ViewGroup parent, int viewType) {
+                DistriViewholder viewHolder = super.onCreateViewHolder(parent, viewType);
+                viewHolder.setOnClickListener(new DistriViewholder.ClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        String mGroupId = mDatabase.push().getKey();
+                        mDatabase.child(mGroupId).setValue(new Distribuidor());
+
+                        Toast.makeText(getContext(), "Item clicked at " + position+" "+mGroupId , Toast.LENGTH_SHORT).show();
 
 
+
+                    }
+
+                    @Override
+                    public void onItemLongClick(View view, int position) {
+                        Toast.makeText(getContext(), "Item long clicked at " + position, Toast.LENGTH_SHORT).show();
+                    }
+                });
+                return viewHolder;
             }
         };
 
-
-
         recyclerStores.setAdapter(firebaseRecyclerAdapter);
-
-
     }
 
-    public static class DistriViewholder extends RecyclerView.ViewHolder {
-        View mView;
-        public DistriViewholder(View itemView){
-            super(itemView);
-            mView=itemView;
-        }
-
-        public void setName(String name){
-            TextView post_name = mView.findViewById(R.id.textTitulo);
-            post_name.setText(name);
-        }
-
-        public void setDescrip(String description){
-            TextView post_descrip = mView.findViewById(R.id.textShortDes);
-            post_descrip.setText(description);
-        }
-
-        public void setImg(Context ctx,String image){
-            ImageView post_img = (ImageView) mView.findViewById(R.id.imageView3);
-            Picasso.with(ctx).load(image).into(post_img);
-        }
-
-
-    }
 }
