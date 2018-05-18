@@ -18,11 +18,7 @@
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
 
         </activity>
 
@@ -30,7 +26,15 @@
             android:name="com.google.android.gms.API_KEY"
             android:value="AIzaSyDTALOvGxy81YkVl4f-rTLjqsRWZlR5jqw" />
 
+
+
         <activity android:name=".LoginActivity">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
 
 
         </activity>

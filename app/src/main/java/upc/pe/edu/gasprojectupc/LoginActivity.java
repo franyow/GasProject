@@ -89,6 +89,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
 
             nameUser.setText("Hello: " + account.getDisplayName());
+            Intent intent = new Intent(this,MainActivity.class  );
+            startActivity(intent);
 
 
         }catch (ApiException e){
