@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "896713661220-5hdk2m5nu2mn0a1nv6fljbnieja59tt6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "upc.pe.edu.gasprojectupc",
+            "certificate_hash": "dcca68c5bbc9144d9ac27f070da590798b508799"
+          }
+        },
+        {
           "client_id": "896713661220-a196amb8ei5hcj93j18gm7o49rbrd802.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
