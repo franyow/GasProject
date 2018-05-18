@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/GasProjectUPC.iml" filepath="$PROJECT_DIR$/GasProjectUPC.iml" />
+      <module fileurl="file://$PROJECT_DIR$/GasProject.iml" filepath="$PROJECT_DIR$/GasProject.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
