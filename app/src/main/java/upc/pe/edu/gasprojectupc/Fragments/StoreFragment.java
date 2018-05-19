@@ -55,7 +55,7 @@ public class StoreFragment extends Fragment {
     RecyclerView recyclerStores;
     ArrayList<Store> listaStores;
     DatabaseReference mDatabase;
-    String key = mDatabase.child("suppliers").push().getKey();
+    //String key = mDatabase.child("suppliers").push().getKey();
 
 
     Activity activity;
