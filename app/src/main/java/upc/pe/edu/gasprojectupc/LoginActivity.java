@@ -1,5 +1,6 @@
 package upc.pe.edu.gasprojectupc;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.nfc.Tag;
 import android.support.annotation.NonNull;
@@ -27,6 +28,11 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.net.Authenticator;
 
@@ -50,12 +56,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         mAuth = FirebaseAuth.getInstance();
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this,this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
+
         googleSignInClient = GoogleSignIn.getClient(this, gso);
         nameUser = (TextView) findViewById(R.id.nameSujetou);
         signInButton = (SignInButton) findViewById(R.id.signInButton);
@@ -66,7 +70,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         super.onStart();
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        //updateUI(account);
+        updateUI(currentUser);
     }
 
 
@@ -91,7 +95,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                handleSignInResult(task);
+                //handleSignInResult(task);
+                firebaseAuthWithGoogle(task);
             }catch (ApiException e){
                 Log.w(TAG, "Google sign in failed", e);
 
@@ -101,31 +106,13 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         }
     }
 
-    private void handleSignInResult(Task<GoogleSignInAccount> completedTask){
 
-        try {
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-
-            //updateUI(account);
-
-
-            nameUser.setText("Hello: " + account.getDisplayName());
-            Intent intent = new Intent(this,MainActivity.class  );
-            startActivity(intent);
-
-
-        }catch (ApiException e){
-            Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
-            //updateUI(null);
-        }
-    }
 
     private void firebaseAuthWithGoogle(Task<GoogleSignInAccount> completedTask){
 
         try {
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-            nameUser.setText("Hello: " + account.getDisplayName());
-
+            final GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+            //nameUser.setText("Hello: " + account.getDisplayName());
 
             Log.d(TAG, "firebaseAuthWithGoogle: " + account.getId());
 
@@ -137,7 +124,37 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             if (task.isSuccessful()){
                                 Log.d(TAG, "signInWithCredential:success");
                                 FirebaseUser user = mAuth.getCurrentUser();
-                                //updateUI(user);
+                                updateUI(user);
+
+
+
+
+                                FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+                                DatabaseReference myRef = database.getReference("customers");
+
+
+
+
+                                myRef.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        String value = dataSnapshot.getValue().toString();
+                                        nameUser.setText(value);
+
+
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+
+
+
+
                             }else{
                                 Log.w(TAG, "signInWithCredential:failure", task.getException());
                                 Toast.makeText(LoginActivity.this, "Authenticacion failed.",
@@ -151,6 +168,21 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         }catch (ApiException e){
             Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
         }
+
+    }
+
+    private void updateUI(FirebaseUser user) {
+
+        if (user != null) {
+            nameUser = findViewById(R.id.nameSujetou);
+            //nameUser.setText(user.getUid());
+            findViewById(R.id.signInButton).setVisibility(View.GONE);
+            Intent intent = new Intent(this,MainActivity.class  );
+            startActivity(intent);
+
+        } else {
+            findViewById(R.id.signInButton).setVisibility(View.VISIBLE);
+        }
     }
 
 
@@ -159,3 +191,5 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         Log.d(TAG, "onConnectionFailed: " + connectionResult);
     }
 }
+
+
