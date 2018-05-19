@@ -12,7 +12,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
+
+import upc.pe.edu.gasprojectupc.Entities.Distribuidor;
 import upc.pe.edu.gasprojectupc.Entities.Store;
 import upc.pe.edu.gasprojectupc.R;
 
@@ -26,8 +36,14 @@ import upc.pe.edu.gasprojectupc.R;
  * create an instance of this fragment.
  */
 public class DetailStoreFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+
+    DatabaseReference mDatabase;
+
+
+
+
+
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -37,9 +53,10 @@ public class DetailStoreFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    TextView textDescription;
+    TextView textDescription,textNombre;
     ImageView imageDetalle;
     FloatingActionButton buttonCarrito;
+
 
     public DetailStoreFragment() {
         // Required empty public constructor
@@ -77,19 +94,52 @@ public class DetailStoreFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detail, container, false);
         textDescription=view.findViewById(R.id.textDescription);
+        textNombre=view.findViewById(R.id.textNombreD);
+
         imageDetalle=view.findViewById(R.id.imageDetail);
         buttonCarrito = view.findViewById(R.id.addFloat);
 
+
+        //recibe bundle de objeto
         Bundle storeObject = getArguments();
-        Store store = null;
+        Distribuidor distribuidor = null;
 
-        if(storeObject != null){
-            store=(Store) storeObject.getSerializable("objeto");
-            imageDetalle.setImageResource(store.getImgDetail());
-            textDescription.setText(store.getDescription());
+        //String key = null;
 
+        if(storeObject != null) {
+            distribuidor = (Distribuidor) storeObject.getSerializable("object");
+            //mDatabase= FirebaseDatabase.getInstance().getReference().child("suppliers");
+            //mDatabase.keepSynced(true);}
 
+            textDescription.setText(distribuidor.getDescription());
+            Picasso.with(getContext()).load(distribuidor.getImage()).into(imageDetalle);
+            textNombre.setText(distribuidor.getName());
         }
+
+
+
+            //Query query = mDatabase.equalTo(key);
+
+            /*mDatabase.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    String value = dataSnapshot.getValue(String.class);
+                    textDescription.setText(value);
+
+                    dataSnapshot.getChildren();
+
+                    Distribuidor distri = dataSnapshot.getValue(Distribuidor.class);
+                    //Picasso.with(getContext()).load(distri.getImage()).into(imageDetalle);
+
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Toast.makeText(getContext(), "on Cancelled", Toast.LENGTH_SHORT).show();
+
+                }
+            });
 
         buttonCarrito.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,9 +149,7 @@ public class DetailStoreFragment extends Fragment {
 
 
             }
-        });
-
-
+        });*/
 
 
 
@@ -132,16 +180,7 @@ public class DetailStoreFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);

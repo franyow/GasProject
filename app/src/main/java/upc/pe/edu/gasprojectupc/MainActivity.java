@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import upc.pe.edu.gasprojectupc.Entities.Distribuidor;
 import upc.pe.edu.gasprojectupc.Entities.Store;
 import upc.pe.edu.gasprojectupc.Fragments.CardsFragment;
 import upc.pe.edu.gasprojectupc.Fragments.CarritoFragment;
@@ -29,8 +30,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, CardsFragment.OnFragmentInteractionListener, DetailStoreFragment.OnFragmentInteractionListener, FavoritesFragment.OnFragmentInteractionListener, MapFragment.OnFragmentInteractionListener, OrderDetailFragment.OnFragmentInteractionListener,OrderFragment.OnFragmentInteractionListener,StoreFragment.OnFragmentInteractionListener, IComunicateFragments, CarritoFragment.OnFragmentInteractionListener {
 
     DetailStoreFragment detailStoreFragment;
-    DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-    DatabaseReference mensajeRef= ref.child("mensaje");
+
 
 
     @Override
@@ -40,26 +40,20 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
 
-       DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-       ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-               this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-       drawer.addDrawerListener(toggle);
-       toggle.syncState();
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
 
-       NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-       navigationView.setNavigationItemSelectedListener(this);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
-       Fragment fragment = new StoreFragment();
-       getSupportFragmentManager().beginTransaction().replace(R.id.content_main,fragment).commit();
+        //inicia fragment principal
+
+        Fragment fragment = new StoreFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.content_main,fragment).commit();
 
     }
 
@@ -145,11 +139,12 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+
     @Override
-    public void enviarTienda(Store store) {
+    public void enviarDistri(Distribuidor distribuidor) {
         detailStoreFragment = new DetailStoreFragment();
         Bundle bundleEnvio = new Bundle();
-        bundleEnvio.putSerializable("objeto",store);
+        bundleEnvio.putSerializable("object",distribuidor);
         detailStoreFragment.setArguments(bundleEnvio);
 
         //carga fragment en activity

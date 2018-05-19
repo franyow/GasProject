@@ -1,5 +1,6 @@
 package upc.pe.edu.gasprojectupc.Interfaces;
 
+import upc.pe.edu.gasprojectupc.Entities.Distribuidor;
 import upc.pe.edu.gasprojectupc.Entities.Store;
 
 /**
@@ -7,5 +8,5 @@ import upc.pe.edu.gasprojectupc.Entities.Store;
  */
 
 public interface IComunicateFragments {
-    public void enviarTienda(Store store);
+    public void enviarDistri(Distribuidor distribuidor);
 }
