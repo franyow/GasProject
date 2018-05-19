@@ -19,8 +19,9 @@
 
             <ImageView
                 android:id="@+id/imageDetail"
-                android:layout_width="match_parent"
+                android:layout_width="300dp"
                 android:layout_height="150dp"
+                android:layout_gravity="center"
                 android:layout_marginBottom="15dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
@@ -48,7 +49,11 @@
                 android:text="Descripción" />
 
 
+
+
         </LinearLayout>
+
+
 
 
     </ScrollView>
@@ -63,5 +68,3 @@
 
 
 </android.support.design.widget.CoordinatorLayout>
-
-

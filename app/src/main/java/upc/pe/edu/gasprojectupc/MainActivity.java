@@ -55,6 +55,8 @@ public class MainActivity extends AppCompatActivity
         Fragment fragment = new StoreFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.content_main,fragment).commit();
 
+
+
     }
 
     @Override
@@ -138,6 +140,8 @@ public class MainActivity extends AppCompatActivity
     public void onPointerCaptureChanged(boolean hasCapture) {
 
     }
+
+
 
 
     @Override

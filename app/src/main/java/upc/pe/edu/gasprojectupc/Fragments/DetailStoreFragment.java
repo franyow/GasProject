@@ -116,8 +116,6 @@ public class DetailStoreFragment extends Fragment {
             textNombre.setText(distribuidor.getName());
         }
 
-
-
             //Query query = mDatabase.equalTo(key);
 
             /*mDatabase.addValueEventListener(new ValueEventListener() {
@@ -131,7 +129,6 @@ public class DetailStoreFragment extends Fragment {
                     Distribuidor distri = dataSnapshot.getValue(Distribuidor.class);
                     //Picasso.with(getContext()).load(distri.getImage()).into(imageDetalle);
 
-
                 }
 
                 @Override
@@ -141,15 +138,17 @@ public class DetailStoreFragment extends Fragment {
                 }
             });
 
+        });*/
+
         buttonCarrito.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Fragment fragment = new CarritoFragment();
-                getFragmentManager().beginTransaction().replace(R.id.content_main,fragment).commit();
+                getFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
 
 
             }
-        });*/
+        });
 
 
 
