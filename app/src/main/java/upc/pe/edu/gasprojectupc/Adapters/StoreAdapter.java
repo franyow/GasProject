@@ -43,7 +43,6 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.ViewHolder> 
         holder.shortdescript.setText(listaDatos.get(position).getShortDescription());
 
 
-
     }
 
     public void setOnClickListener(View.OnClickListener listener){

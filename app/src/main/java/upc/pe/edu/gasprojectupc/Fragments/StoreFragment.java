@@ -7,14 +7,18 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -47,15 +51,9 @@ public class StoreFragment extends Fragment {
 
     RecyclerView recyclerStores;
     ArrayList<Store> listaStores;
+
     DatabaseReference mDatabase;
     DatabaseReference detailSupplier;
-
-
-
-    //
-    // read the index key
-
-
 
     Activity activity;
     IComunicateFragments interfaceComunicateFragments;
@@ -64,14 +62,7 @@ public class StoreFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment StoreFragment.
-     */
+
     // TODO: Rename and change types and number of parameters
     public static StoreFragment newInstance(String param1, String param2) {
         StoreFragment fragment = new StoreFragment();
@@ -111,9 +102,6 @@ public class StoreFragment extends Fragment {
         recyclerStores.setLayoutManager(new LinearLayoutManager(getContext()));
 
 
-
-
-
         //StoreAdapter adapter = new StoreAdapter(listaStores);
         //recyclerStores.setAdapter(adapter);
 
@@ -130,11 +118,7 @@ public class StoreFragment extends Fragment {
         return view;
     }
 
-    private void llenarLista() {
-        listaStores.add(new Store("Illidan",R.drawable.illidan,"Illidan Tempestira fue el autoproclamado Señor de Terrallende , que gobernó desde el Templo Oscuro. Illidan nació como un un elfo de la noche, y, en palabras de Maiev Shadowsong \"no es un demonio ni un elfo de la noche, sino algo más\". Es el hermano gemelo de Malfurion, y, al igual que él, siempre estuvo enamorado de Tyrande Whisperwind .",R.drawable.illidan_detail,"Señor de terrallente"));
-        listaStores.add(new Store("Valeera",R.drawable.valeera,"Valeera Sanguinar es un pícaro elfo de sangre ofrecida en World of Warcraft de la CC ilimitada.Valeera aparece en World of Warcraft: The Comic . Descrito como \"joven, caliente y amargo\", se ha dado cuenta de que el mundo se ha convertido en un lugar muy diferente, ya que la destrucción de Quel'Thalas . Se dijo desde el principio que ella se siente atraída físicamente a la protagonista principal de la serie humana. Esta idea no ha sido visitada en el cómic y Varian incluso se refiere a ella como un niño varias veces. ",R.drawable.valeera_detail,"Valeera Sanguinar"));
 
-    }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -147,7 +131,7 @@ public class StoreFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        //comunica lista y detalle
+        //necesario para comunica lista y detalle
         if(context instanceof Activity){
             this.activity = (Activity) context;
             interfaceComunicateFragments= (IComunicateFragments) this.activity;
@@ -196,11 +180,36 @@ public class StoreFragment extends Fragment {
                 DistriViewholder viewHolder = super.onCreateViewHolder(parent, viewType);
                 viewHolder.setOnClickListener(new DistriViewholder.ClickListener() {
                     @Override
-                    public void onItemClick(View view, int position) {
+                    public void onItemClick(final View view, int position) {
                         String mGroupId = mDatabase.push().getKey();
                         mDatabase.child(mGroupId).setValue(new Distribuidor());
+                        final ArrayList<Distribuidor> distriList = new ArrayList<>();
 
-                        Toast.makeText(getContext(), "Item clicked at " + position+" "+mGroupId , Toast.LENGTH_SHORT).show();
+
+                        //Toast.makeText(getContext(), "Item clicked at " + position+" "+distribuidor.getName() , Toast.LENGTH_SHORT).show();
+
+                        mDatabase.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
+                                    Distribuidor distribuidor = messageSnapshot.getValue(Distribuidor.class);
+                                    Log.d("TESTING ","NOMBRE: "+distribuidor.getName());
+                                    distriList.add(distribuidor);
+
+
+
+                                }
+
+
+                                interfaceComunicateFragments.enviarDistri(distriList.get(recyclerStores.getChildAdapterPosition(view)));
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
 
 
 

@@ -58,8 +58,6 @@ public class DistriViewholder extends RecyclerView.ViewHolder {
 
 
 
-
-
     private DistriViewholder.ClickListener mClickListener;
 
     //Interface to send callbacks...
