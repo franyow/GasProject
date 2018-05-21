@@ -11,8 +11,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.androidnetworking.widget.ANImageView;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
 
 import upc.pe.edu.gasprojectupc.Entities.Distribuidor;
 import upc.pe.edu.gasprojectupc.Entities.Store;
@@ -31,7 +38,9 @@ public class MainActivity extends AppCompatActivity
 
     DetailStoreFragment detailStoreFragment;
 
-
+    ANImageView userPhotoImageView;
+    TextView userNameTextView;
+    TextView userEmailTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +48,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -49,6 +57,25 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+        View header=navigationView.getHeaderView(0);
+
+        userPhotoImageView = (ANImageView)  header.findViewById(R.id.userPhotoANImageView);
+        userNameTextView = (TextView) header.findViewById(R.id.userNameTextView);
+        userEmailTextView = (TextView) header.findViewById(R.id.userEmailTextView);
+
+        Bundle bundle = this.getIntent().getExtras();
+
+        ArrayList<String> profile = new ArrayList<>();
+
+        profile = bundle.getStringArrayList("Profile");
+
+        userNameTextView.setText(profile.get(0));
+        userEmailTextView.setText(profile.get(1));
+        userPhotoImageView.setImageUrl(profile.get(2));
+
+
 
         //inicia fragment principal
 

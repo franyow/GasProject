@@ -13,14 +13,15 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <ImageView
-        android:id="@+id/imageView"
+    <com.androidnetworking.widget.ANImageView
+        android:id="@+id/userPhotoANImageView"
         android:layout_width="103dp"
         android:layout_height="85dp"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        app:srcCompat="@drawable/becerril" />
+        android:src="@drawable/becerril"/>
 
     <TextView
+        android:id="@+id/userNameTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
@@ -28,7 +29,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/userEmailTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="becerril@fp.com" />

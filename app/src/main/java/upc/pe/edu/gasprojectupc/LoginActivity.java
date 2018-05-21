@@ -1,8 +1,6 @@
 package upc.pe.edu.gasprojectupc;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.nfc.Tag;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,12 +9,10 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
@@ -34,7 +30,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.net.Authenticator;
+import java.util.ArrayList;
+
+import upc.pe.edu.gasprojectupc.Entities.Customer;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener{
@@ -112,7 +110,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         try {
             final GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-            //nameUser.setText("Hello: " + account.getDisplayName());
 
             Log.d(TAG, "firebaseAuthWithGoogle: " + account.getId());
 
@@ -125,36 +122,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                 Log.d(TAG, "signInWithCredential:success");
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 updateUI(user);
-
-
-
-
-                                FirebaseDatabase database = FirebaseDatabase.getInstance();
-
-                                DatabaseReference myRef = database.getReference("customers");
-
-
-
-
-                                myRef.addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        String value = dataSnapshot.getValue().toString();
-                                        nameUser.setText(value);
-
-
-
-                                    }
-
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-
-                                    }
-                                });
-
-
-
-
                             }else{
                                 Log.w(TAG, "signInWithCredential:failure", task.getException());
                                 Toast.makeText(LoginActivity.this, "Authenticacion failed.",
@@ -164,20 +131,28 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         }
                     });
 
-
         }catch (ApiException e){
             Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
         }
-
     }
 
     private void updateUI(FirebaseUser user) {
 
         if (user != null) {
             nameUser = findViewById(R.id.nameSujetou);
-            //nameUser.setText(user.getUid());
             findViewById(R.id.signInButton).setVisibility(View.GONE);
+
+            ArrayList<String> userProfile = new ArrayList<>();
+
+            userProfile.add(user.getDisplayName());
+            userProfile.add(user.getEmail());
+            userProfile.add( user.getPhotoUrl().toString());
+
+            Bundle bundle = new Bundle();
+            bundle.putStringArrayList("Profile", userProfile);
+
             Intent intent = new Intent(this,MainActivity.class  );
+            intent.putExtras(bundle);
             startActivity(intent);
 
         } else {
