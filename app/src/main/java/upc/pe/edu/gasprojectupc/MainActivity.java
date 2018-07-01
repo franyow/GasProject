@@ -21,6 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
+import upc.pe.edu.gasprojectupc.Entities.Distri;
 import upc.pe.edu.gasprojectupc.Entities.Distribuidor;
 import upc.pe.edu.gasprojectupc.Entities.Store;
 import upc.pe.edu.gasprojectupc.Fragments.CardsFragment;
@@ -114,6 +115,12 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.action_settings) {
             return true;
         }
+        if (id == R.id.shopcar) {
+            Fragment fragment = new CarritoFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_main,fragment).commit();
+
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -132,7 +139,7 @@ public class MainActivity extends AppCompatActivity
             myFragment = new StoreFragment();
             fragmentSelected=true;
         } else if (id == R.id.nav_gallery) {
-            myFragment = new OrderDetailFragment();
+            myFragment = new CarritoFragment();
             fragmentSelected=true;
 
         } else if (id == R.id.nav_slideshow) {
@@ -172,7 +179,7 @@ public class MainActivity extends AppCompatActivity
 
 
     @Override
-    public void enviarDistri(Distribuidor distribuidor) {
+    public void enviarDistri(Distri distribuidor) {
         detailStoreFragment = new DetailStoreFragment();
         Bundle bundleEnvio = new Bundle();
         bundleEnvio.putSerializable("object",distribuidor);

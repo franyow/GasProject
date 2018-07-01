@@ -20,11 +20,12 @@
 
 
 
+
         </activity>
 
         <meta-data
             android:name="com.google.android.gms.API_KEY"
-            android:value="AIzaSyDTALOvGxy81YkVl4f-rTLjqsRWZlR5jqw" />
+            android:value="AIzaSyBpzcIEPprjOEyCWgHW2mun1jPwiA-8LHQ" />
 
 
 
@@ -35,6 +36,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
 
 
         </activity>

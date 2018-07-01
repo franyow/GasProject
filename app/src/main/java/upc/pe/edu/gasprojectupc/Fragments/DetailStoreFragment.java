@@ -7,13 +7,18 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,9 +27,18 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import upc.pe.edu.gasprojectupc.Adapters.CarritoAdapter;
+import upc.pe.edu.gasprojectupc.Entities.Distri;
 import upc.pe.edu.gasprojectupc.Entities.Distribuidor;
+import upc.pe.edu.gasprojectupc.Entities.Order;
+import upc.pe.edu.gasprojectupc.Entities.Product;
 import upc.pe.edu.gasprojectupc.Entities.Store;
 import upc.pe.edu.gasprojectupc.R;
+
+import static android.widget.Toast.LENGTH_LONG;
 
 
 /**
@@ -39,7 +53,8 @@ public class DetailStoreFragment extends Fragment {
 
     DatabaseReference mDatabase;
 
-
+    RecyclerView recyclerProducts;
+    ArrayList<Order> listProducts;
 
 
 
@@ -53,9 +68,19 @@ public class DetailStoreFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    TextView textDescription,textNombre;
+    TextView textNombre;
     ImageView imageDetalle;
+    Button buttonAddP;
+
     FloatingActionButton buttonCarrito;
+
+    //referencia
+
+    FirebaseAuth mAuth;
+
+
+
+
 
 
     public DetailStoreFragment() {
@@ -87,58 +112,89 @@ public class DetailStoreFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detail, container, false);
-        textDescription=view.findViewById(R.id.textDescription);
+
+
+        mAuth = FirebaseAuth.getInstance();
+        String uid = mAuth.getCurrentUser().getUid();
+
+
+
         textNombre=view.findViewById(R.id.textNombreD);
+
+        listProducts = new ArrayList<>();
 
         imageDetalle=view.findViewById(R.id.imageDetail);
         buttonCarrito = view.findViewById(R.id.addFloat);
+        recyclerProducts = view.findViewById(R.id.recyclerProducts);
+        buttonAddP = view.findViewById(R.id.buttonAddPro);
+
+        recyclerProducts.setLayoutManager(new GridLayoutManager(getContext(),2));
+
+
+
 
 
         //recibe bundle de objeto
         Bundle storeObject = getArguments();
-        Distribuidor distribuidor = null;
+        Distri distribuidor = null;
 
-        //String key = null;
+        CarritoAdapter adapter = new CarritoAdapter(listProducts);
+        recyclerProducts.setAdapter(adapter);
+
 
         if(storeObject != null) {
-            distribuidor = (Distribuidor) storeObject.getSerializable("object");
-            //mDatabase= FirebaseDatabase.getInstance().getReference().child("suppliers");
+            distribuidor = (Distri) storeObject.getSerializable("object");
+            mDatabase= FirebaseDatabase.getInstance().getReference();
             //mDatabase.keepSynced(true);}
 
-            textDescription.setText(distribuidor.getDescription());
+            //textDescription.setText(distribuidor.getDescription());
             Picasso.with(getContext()).load(distribuidor.getImage()).into(imageDetalle);
             textNombre.setText(distribuidor.getName());
-        }
+            Log.e("FUENTES","A" + distribuidor.getProducts().get(0));
 
-            //Query query = mDatabase.equalTo(key);
+            /*for(int i=0;i<distribuidor.getProducts().size();i++){
+                Product p = new Product();
+                p= distribuidor.getProducts().get(i);
+                listProducts.add(p);
+            }*/
 
-            /*mDatabase.addValueEventListener(new ValueEventListener() {
+
+
+
+
+
+           /* mDatabase.child("products").child().child(distribuidor.getIdSupplier()).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    String value = dataSnapshot.getValue(String.class);
-                    textDescription.setText(value);
 
-                    dataSnapshot.getChildren();
+                    Product product = dataSnapshot.getValue(Product.class);
+                    //Obtenemos los valores que queres
+                    String idProduct = product.getIdSupplier();
 
-                    Distribuidor distri = dataSnapshot.getValue(Distribuidor.class);
-                    //Picasso.with(getContext()).load(distri.getImage()).into(imageDetalle);
+
+                    Log.e("id de producto: " , "" + idProduct );
+
+
+
 
                 }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-                    Toast.makeText(getContext(), "on Cancelled", Toast.LENGTH_SHORT).show();
-
+                    System.out.println("The read failed: " + databaseError.getCode());
                 }
             });
+*/
+        }
 
-        });*/
+
 
         buttonCarrito.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,6 +210,8 @@ public class DetailStoreFragment extends Fragment {
 
         return view;
     }
+
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

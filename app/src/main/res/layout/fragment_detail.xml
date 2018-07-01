@@ -22,10 +22,10 @@
                 android:layout_width="300dp"
                 android:layout_height="150dp"
                 android:layout_gravity="center"
-                android:layout_marginBottom="15dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/illidan" />
 
@@ -33,22 +33,15 @@
                 android:id="@+id/textNombreD"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:text="TextView"
-                android:textSize="18sp"/>
+                android:textSize="18sp" />
 
-            <TextView
-                android:id="@+id/textDescription"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerProducts"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="15dp"
-                android:text="Descripción" />
-
-
+                android:layout_height="match_parent" />
 
 
         </LinearLayout>

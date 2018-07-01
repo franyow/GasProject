@@ -18,12 +18,18 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 import upc.pe.edu.gasprojectupc.Adapters.DistriViewholder;
+import upc.pe.edu.gasprojectupc.Entities.Distri;
 import upc.pe.edu.gasprojectupc.Entities.Distribuidor;
+import upc.pe.edu.gasprojectupc.Entities.Product;
 import upc.pe.edu.gasprojectupc.Entities.Store;
 import upc.pe.edu.gasprojectupc.Interfaces.IComunicateFragments;
 import upc.pe.edu.gasprojectupc.R;
@@ -50,7 +56,7 @@ public class StoreFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     RecyclerView recyclerStores;
-    ArrayList<Store> listaStores;
+    ArrayList<Distribuidor> listaStores;
 
     DatabaseReference mDatabase;
     DatabaseReference detailSupplier;
@@ -184,6 +190,7 @@ public class StoreFragment extends Fragment {
                         String mGroupId = mDatabase.push().getKey();
                         mDatabase.child(mGroupId).setValue(new Distribuidor());
                         final ArrayList<Distribuidor> distriList = new ArrayList<>();
+                        final ArrayList<Distri> distriList1 = new ArrayList<>();
 
 
                         //Toast.makeText(getContext(), "Item clicked at " + position+" "+distribuidor.getName() , Toast.LENGTH_SHORT).show();
@@ -191,17 +198,54 @@ public class StoreFragment extends Fragment {
                         mDatabase.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                /*GenericTypeIndicator<Map<String, Distri>> t = new GenericTypeIndicator<Map<String, Distri>>() {};
+                                Map<String, Distri> map = dataSnapshot.getValue(t);
+
+                                List<Distri> targetList = new ArrayList<>(map.values());*/
+                                ArrayList<Product> pro = new ArrayList<>();
+
+
                                 for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
+
+                                    Map<String, Object> map = (Map<String, Object>) messageSnapshot.getValue();
+                                    String nameProduct = (String) map.get("nameProduct");
+                                    String price = (String) map.get("unitPrice");
+                                    String imgProduct = (String) map.get("imageProduct");
+
+
+
+                                    String date = (String) map.get("date");
+                                    String description = (String) map.get("description");
+                                    String idSupplier = (String) map.get("idSupplier");
+                                    String image = (String) map.get("image");
+                                    String latitude = (String) map.get("latitude");
+                                    String longitud = (String) map.get("longitud");
+                                    String name = (String) map.get("name");
+                                    String phone = (String) map.get("phone");
+
+
+                                    pro.add(new Product(nameProduct,price,imgProduct));
+
+                                    distriList1.add(new Distri(date,description,idSupplier,image,latitude,longitud,name,phone, pro));
+                                    Log.e("product list", ""+pro.size());
+
+
+
+
                                     Distribuidor distribuidor = messageSnapshot.getValue(Distribuidor.class);
+
+                                    //Distri distri = messageSnapshot.getValue(Distri.class);
                                     Log.d("TESTING ","NOMBRE: "+distribuidor.getName());
                                     distriList.add(distribuidor);
+                                    //distriList1.add(distri);
 
 
 
                                 }
 
 
-                                interfaceComunicateFragments.enviarDistri(distriList.get(recyclerStores.getChildAdapterPosition(view)));
+                                interfaceComunicateFragments.enviarDistri(distriList1.get(recyclerStores.getChildAdapterPosition(view)));
 
                             }
 

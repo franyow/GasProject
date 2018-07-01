@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Distribuidor implements Serializable    {
+public class Distri implements Serializable    {
 
     String date;
     String description;
@@ -14,13 +14,12 @@ public class Distribuidor implements Serializable    {
     String longitude;
     String name;
     String phone;
+    ArrayList<Product> products;
 
-
-
-    public Distribuidor() {
+    public Distri() {
     }
 
-    public Distribuidor(String date, String description, String idSupplier, String image, String latitude, String longitude, String name, String phone) {
+    public Distri(String date, String description, String idSupplier, String image, String latitude, String longitude, String name, String phone, ArrayList<Product> products) {
         this.date = date;
         this.description = description;
         this.idSupplier = idSupplier;
@@ -29,7 +28,7 @@ public class Distribuidor implements Serializable    {
         this.longitude = longitude;
         this.name = name;
         this.phone = phone;
-
+        this.products = products;
     }
 
     public String getDate() {
@@ -96,6 +95,14 @@ public class Distribuidor implements Serializable    {
         this.phone = phone;
     }
 
+    public ArrayList<Product> getProducts() {
+        return products;
+    }
 
+    public void setProducts(ArrayList<Product> products) {
+        this.products = products;
+    }
 }
+
+
 

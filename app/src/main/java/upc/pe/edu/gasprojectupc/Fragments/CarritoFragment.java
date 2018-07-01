@@ -4,15 +4,31 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.Map;
+
+import upc.pe.edu.gasprojectupc.Adapters.OrderViewHolder;
+import upc.pe.edu.gasprojectupc.Entities.Distri;
+import upc.pe.edu.gasprojectupc.Entities.Order;
+import upc.pe.edu.gasprojectupc.Entities.Product;
+import upc.pe.edu.gasprojectupc.Entities.Store;
 import upc.pe.edu.gasprojectupc.R;
 
 /**
@@ -29,8 +45,13 @@ public class CarritoFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    Button buttonDetallesPago;
-    DatabaseReference mRef;
+
+    RecyclerView recyclerStores;
+    ArrayList<Order> listaStores;
+
+    FirebaseAuth mAuth;
+
+    DatabaseReference mDatabase;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -75,24 +96,97 @@ public class CarritoFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_carrito, container, false);
 
-        buttonDetallesPago = view.findViewById(R.id.buttonPagar);
+        mDatabase=FirebaseDatabase.getInstance().getReference().child("orders");
 
-        buttonDetallesPago.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Fragment fragment = new OrderDetailFragment();
-                getFragmentManager().beginTransaction().replace(R.id.content_main,fragment).commit();
-            }
-        });
+        recyclerStores=view.findViewById(R.id.recyclerCarrito);
+        listaStores = new ArrayList<>();
+        recyclerStores.setLayoutManager(new LinearLayoutManager(getContext()));
 
-
-
-
+        //obtengo id del usuario
+        mAuth = FirebaseAuth.getInstance();
+        String uid = mAuth.getCurrentUser().getUid();
 
 
 
         return view;
 
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        FirebaseRecyclerAdapter<Order,OrderViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Order, OrderViewHolder>
+                (Order.class,R.layout.item_order,OrderViewHolder.class,mDatabase) {
+            @Override
+            protected void populateViewHolder(OrderViewHolder viewHolder, Order model, int position) {
+
+                viewHolder.setName(model.getIdProduct());
+                viewHolder.setPrice(model.getPrice());
+                viewHolder.setQuantity(model.getQuantity());
+                viewHolder.setDate(model.getDate());
+
+            }
+
+            @Override
+            public OrderViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                OrderViewHolder viewHolder = super.onCreateViewHolder(parent, viewType);
+                viewHolder.setOnClickListener(new OrderViewHolder.ClickListener() {
+                    @Override
+                    public void onItemClick(final View view, int position) {
+                        String mGroupId = mDatabase.push().getKey();
+                        mDatabase.child(mGroupId).setValue(new Order());
+                        final ArrayList<Order> distriList = new ArrayList<>();
+
+
+
+                        mDatabase.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+
+                                ArrayList<Order> pro = new ArrayList<>();
+
+
+                                for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
+
+
+
+                                    Order distribuidor = messageSnapshot.getValue(Order.class);
+
+                                    //Distri distri = messageSnapshot.getValue(Distri.class);
+                                    Log.d("TESTING ","NOMBRE: "+distribuidor.getIdProduct());
+                                    distriList.add(distribuidor);
+                                    //distriList1.add(distri);
+
+
+
+                                }
+
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+
+
+
+                    }
+
+                    @Override
+                    public void onItemLongClick(View view, int position) {
+                        Toast.makeText(getContext(), "Item long clicked at " + position, Toast.LENGTH_SHORT).show();
+                    }
+                });
+                return viewHolder;
+            }
+        };
+
+        recyclerStores.setAdapter(firebaseRecyclerAdapter);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -119,16 +213,7 @@ public class CarritoFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
