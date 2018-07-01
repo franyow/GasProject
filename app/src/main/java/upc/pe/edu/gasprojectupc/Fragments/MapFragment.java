@@ -1,8 +1,12 @@
 package upc.pe.edu.gasprojectupc.Fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -11,15 +15,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import upc.pe.edu.gasprojectupc.MainActivity;
 import upc.pe.edu.gasprojectupc.R;
 
 
@@ -31,6 +40,10 @@ public class MapFragment extends Fragment {
 
     MapView mMapView;
     private GoogleMap googleMap;
+    private final int REQUEST_ACCES_FINE=0;
+    private Marker marcador;
+    double lat=0.0;
+    double lng=0.0;
 
 
     // TODO: Rename and change types of parameters
@@ -69,8 +82,10 @@ public class MapFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
         mMapView = (MapView) view.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
+        comprobarPermisos();
 
         mMapView.onResume();
+
 
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
@@ -94,21 +109,47 @@ public class MapFragment extends Fragment {
                     // for ActivityCompat#requestPermissions for more details.
                     return;
                 }
+
+
+
+                googleMap.setMyLocationEnabled(true);
+                googleMap.getUiSettings().setZoomControlsEnabled(true);
+                googleMap.isMyLocationEnabled();
                 googleMap.setMyLocationEnabled(true);
 
+
+                LatLng coordenadas = new LatLng(-12.186630800000001,-77.0137079);
+                CameraUpdate ubicacion = CameraUpdateFactory.newLatLngZoom(coordenadas,10);
+                googleMap.moveCamera(ubicacion);
+
+
+
+
+
                 // For dropping a marker at a point on the Map
-                LatLng sydney = new LatLng(-34, 151);
-                googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
+                //LatLng sydney = new LatLng(-34, 151);
+                //googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
 
                 // For zooming automatically to the location of the marker
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
-                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                //CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
+                //googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             }
         });
+
+
+
 
         return view;
 
     }
+
+    public void comprobarPermisos(){
+        if(ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+            ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_FINE_LOCATION},REQUEST_ACCES_FINE);
+    }
+
+
+
 
 
 

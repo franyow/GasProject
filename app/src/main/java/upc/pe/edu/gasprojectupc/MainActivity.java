@@ -1,12 +1,22 @@
 package upc.pe.edu.gasprojectupc;
 
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -14,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.androidnetworking.widget.ANImageView;
 import com.google.firebase.database.DatabaseReference;
@@ -38,6 +49,8 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, CardsFragment.OnFragmentInteractionListener, DetailStoreFragment.OnFragmentInteractionListener, FavoritesFragment.OnFragmentInteractionListener, MapFragment.OnFragmentInteractionListener, OrderDetailFragment.OnFragmentInteractionListener,OrderFragment.OnFragmentInteractionListener,StoreFragment.OnFragmentInteractionListener, IComunicateFragments, CarritoFragment.OnFragmentInteractionListener {
 
     DetailStoreFragment detailStoreFragment;
+
+    private final int REQUEST_ACCES_FINE=0;
 
     ANImageView userPhotoImageView;
     TextView userNameTextView;
@@ -67,6 +80,9 @@ public class MainActivity extends AppCompatActivity
         userEmailTextView = (TextView) header.findViewById(R.id.userEmailTextView);
 
         Bundle bundle = this.getIntent().getExtras();
+        solicitarPermisos();
+
+
 
         ArrayList<String> profile = new ArrayList<>();
 
@@ -86,6 +102,8 @@ public class MainActivity extends AppCompatActivity
 
 
     }
+
+
 
     @Override
     public void onBackPressed() {
@@ -188,4 +206,47 @@ public class MainActivity extends AppCompatActivity
         //carga fragment en activity
         getSupportFragmentManager().beginTransaction().replace(R.id.content_main,detailStoreFragment).addToBackStack(null).commit();
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if(requestCode == REQUEST_ACCES_FINE){
+            if(grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED);
+            Toast.makeText(this,"Permiso agregado",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"Permiso denegado",Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
+
+
+    public void solicitarPermisos(){
+
+        LocationManager manager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        if(!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            //Ask the user to enable GPS
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Location Manager");
+            builder.setMessage("Would you like to enable GPS?");
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //Launch settings, allowing user to make a change
+                    Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(i);
+                }
+            });
+            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //No location service, no Activity
+                    finish();
+                }
+            });
+            builder.create().show();
+        }
+    }
+
+
 }
